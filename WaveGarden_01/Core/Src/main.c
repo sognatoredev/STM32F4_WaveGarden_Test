@@ -101,6 +101,7 @@ int main(void)
   while (1)
   {
     LED_Task();
+    UART2_Process();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -274,6 +274,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     {
       prvInputButtonTime = nowInputButtonTime;
       HAL_GPIO_TogglePin(LED_PORT, LED2_PIN);
+      LED2_Status = !LED2_Status;
     }
     else
     {

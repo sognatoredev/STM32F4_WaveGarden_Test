@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "gpio.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
@@ -138,5 +138,14 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+
+uint8_t UART2_Process (void)
+{
+  if (prvLED2_Status != LED2_Status)
+  {
+    prvLED2_Status = LED2_Status;
+    HAL_UART_Transmit(&huart2, "LED2 Toggle.\r\n", 14, 100);
+  }
+}
 
 /* USER CODE END 1 */

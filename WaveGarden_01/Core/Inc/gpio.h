@@ -37,6 +37,9 @@ extern "C" {
 #define LED1_PIN  GPIO_PIN_0
 #define LED2_PIN  GPIO_PIN_7
 #define LED3_PIN  GPIO_PIN_14
+
+extern bool LED2_Status;
+extern bool prvLED2_Status;
 /* USER CODE END Private defines */
 
 void MX_GPIO_Init(void);

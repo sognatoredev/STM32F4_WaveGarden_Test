@@ -30,6 +30,9 @@
 /*----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
 
+bool LED2_Status = false;
+bool prvLED2_Status = false;
+
 /* USER CODE END 1 */
 
 /** Configure pins as
