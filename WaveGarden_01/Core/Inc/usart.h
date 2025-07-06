@@ -35,12 +35,21 @@ extern "C" {
 extern UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN Private defines */
+extern DMA_HandleTypeDef hdma_usart2_rx;
+
+#define UART2_RX_BUF_SIZE 128
+
+extern volatile uint8_t uart2_rx_buf[UART2_RX_BUF_SIZE];    // uart2 수신 버퍼
+
+extern uint8_t uart_data_ready;               // 데이터 수신 완료 플래그
+extern uint16_t uart_rx_length;               // 수신된 실제 길이
 
 /* USER CODE END Private defines */
 
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+extern uint8_t UART2_Print(uint8_t * pData);
 extern uint8_t UART2_Process (void);
 /* USER CODE END Prototypes */
 

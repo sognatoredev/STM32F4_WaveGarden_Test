@@ -52,6 +52,9 @@ default.size.stdout \
 OBJDUMP_LIST += \
 WaveGarden_01.list \
 
+OBJCOPY_HEX += \
+WaveGarden_01.hex \
+
 
 # All Target
 all: main-build
@@ -75,12 +78,17 @@ WaveGarden_01.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+WaveGarden_01.hex: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objcopy  -O ihex $(EXECUTABLES) "WaveGarden_01.hex"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
-	-$(RM) WaveGarden_01.elf WaveGarden_01.list WaveGarden_01.map default.size.stdout
+	-$(RM) WaveGarden_01.elf WaveGarden_01.hex WaveGarden_01.list WaveGarden_01.map default.size.stdout
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_HEX)
 
 fail-specified-linker-script-missing:
 	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'

@@ -98,6 +98,7 @@ uint8_t LED_Blink (void)
   {
     TIM1_CNT_1 = 0;
     LED_Toggle(LED_PORT, LED1_PIN);
+    UART2_Print("LED1 Toggle Blink.\r\n");
   }
   return 0;
 }

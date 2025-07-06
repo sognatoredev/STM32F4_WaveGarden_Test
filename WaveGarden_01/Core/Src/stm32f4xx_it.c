@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "gpio.h"
+#include "usart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -283,5 +284,31 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   }
 }
 
+/**
+  * @brief  Reception Event Callback (Rx event notification called after use of advanced reception service).
+  * @param  huart UART handle
+  * @param  Size  Number of data available in application reception buffer (indicates a position in
+  *               reception buffer until which, data are available)
+  * @retval None
+  */
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+  if (huart->Instance == USART2)
+  {
+
+    // HAL_UART_DMAStop(&huart2);  // 수신 중단
+    // __HAL_UART_CLEAR_IDLEFLAG(&huart2);
+
+    // 남은 DMA 카운터로 실제 수신된 데이터 길이 계산
+    // uart_rx_length = UART2_RX_BUF_SIZE - __HAL_DMA_GET_COUNTER(huart2.hdmarx);
+    uart_rx_length = Size;
+
+    // HAL_UART_DMAResume(&huart2);  // 수신 중단
+    
+    uart_data_ready = 1;                      // 수신 완료 플래그 설정
+
+    // HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
+  }
+}
 
 /* USER CODE END 1 */

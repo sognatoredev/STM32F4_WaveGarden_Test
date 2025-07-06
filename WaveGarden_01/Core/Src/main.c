@@ -94,6 +94,11 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim1);
+
+  // HAL_UART_Receive_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
+  // __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);  // IDLE 인터럽트 활성화
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
+  __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -101,7 +106,7 @@ int main(void)
   while (1)
   {
     LED_Task();
-    // UART2_Process();
+    UART2_Process();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

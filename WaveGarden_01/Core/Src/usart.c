@@ -22,6 +22,12 @@
 
 /* USER CODE BEGIN 0 */
 #include "gpio.h"
+
+volatile uint8_t uart2_rx_buf[UART2_RX_BUF_SIZE];    // uart2 수신 버퍼
+
+uint8_t uart_data_ready = 0;               // 데이터 수신 완료 플래그
+uint16_t uart_rx_length = 0;               // 수신된 실제 길이
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
@@ -139,6 +145,18 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 
+uint8_t UART2_Print(uint8_t * pData)
+{
+  if ((uart_data_ready == 1) && (uart_rx_length != strlen(pData)))
+  {
+    HAL_UART_Transmit(&huart2, pData, uart_rx_length, 100);
+  }
+  else
+  {
+    HAL_UART_Transmit(&huart2, pData, strlen(pData), 100);
+  }
+}
+
 uint8_t UART2_Process (void)
 {
   if (prvLED2_Status != LED2_Status)
@@ -146,6 +164,21 @@ uint8_t UART2_Process (void)
     prvLED2_Status = LED2_Status;
     HAL_UART_Transmit(&huart2, "LED2 Toggle.\r\n", 14, 100);
   }
+
+  if (uart_data_ready)
+  {
+      // 수신된 데이터 처리
+      UART2_Print(uart2_rx_buf);    // uart2 수신 버퍼
+
+      uart_rx_length = 0;
+      uart_data_ready = 0;
+      // DMA 재시작
+      // HAL_UART_DMAStop(&huart2);  // 수신 중단
+      HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
+      __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
+  }
+
+  return ;
 }
 
 /* USER CODE END 1 */
