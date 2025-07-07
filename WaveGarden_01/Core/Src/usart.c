@@ -24,7 +24,7 @@
 #include "gpio.h"
 
 volatile uint8_t uart2_rx_buf[UART2_RX_BUF_SIZE];    // uart2 수신 버퍼
-volatile uint8_t uart6_rx_buf[UART6_RX_BUF_SIZE];    // uart2 수신 버퍼
+volatile uint8_t uart6_rx_buf[UART6_RX_BUF_SIZE];    // uart6 수신 버퍼
 
 uint8_t uart_data_ready = 0;               // 데이터 수신 완료 플래그
 uint16_t uart_rx_length = 0;               // 수신된 실제 길이
@@ -263,14 +263,14 @@ uint8_t UART2_Print(uint8_t * pData)
 
 uint8_t UART6_Print(uint8_t * pData)
 {
-  if ((uart6_data_ready == 1) && (uart6_rx_length != strlen(pData)))
-  {
-    HAL_UART_Transmit(&huart2, pData, uart6_rx_length, 100);
-  }
-  else
-  {
+  // if ((uart6_data_ready == 1) && (uart6_rx_length != strlen(pData)))
+  // {
+  //   HAL_UART_Transmit(&huart2, pData, uart6_rx_length, 100);
+  // }
+  // else
+  // {
     HAL_UART_Transmit(&huart2, pData, strlen(pData), 100);
-  }
+  // }
 }
 
 uint8_t UART2_Process (void)
@@ -308,8 +308,8 @@ uint8_t UART6_Process (void)
       uart6_data_ready = 0;
       // DMA 재시작
       // HAL_UART_DMAStop(&huart2);  // 수신 중단
-      HAL_UARTEx_ReceiveToIdle_DMA(&huart6, uart6_rx_buf, UART6_RX_BUF_SIZE);
-      __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
+      // HAL_UARTEx_ReceiveToIdle_DMA(&huart6, uart6_rx_buf, UART6_RX_BUF_SIZE);
+      // __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
   }
 
   return ;

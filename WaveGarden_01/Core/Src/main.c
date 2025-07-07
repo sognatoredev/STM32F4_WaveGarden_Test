@@ -97,11 +97,11 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim1);
 
   // HAL_UART_Receive_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
-  // __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);  // IDLE 인터럽트 활성화
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
+  // __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);  // IDLE ?��?��?��?�� ?��?��?��
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart2, (uint8_t *) uart2_rx_buf, UART2_RX_BUF_SIZE);
   __HAL_DMA_DISABLE_IT(&hdma_usart2_rx, DMA_IT_HT);
 
-  HAL_UARTEx_ReceiveToIdle_DMA(&huart6, uart6_rx_buf, UART6_RX_BUF_SIZE);
+  HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *) uart6_rx_buf, UART6_RX_BUF_SIZE);
   __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
   /* USER CODE END 2 */
 

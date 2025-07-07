@@ -63,8 +63,8 @@ all: main-build
 main-build: WaveGarden_01.elf secondary-outputs
 
 # Tool invocations
-WaveGarden_01.elf WaveGarden_01.map: $(OBJS) $(USER_OBJS) C:\0.\ Project\WaveGarden\FW\WaveGarden_01\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "WaveGarden_01.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\0. Project\WaveGarden\FW\WaveGarden_01\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="WaveGarden_01.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+WaveGarden_01.elf WaveGarden_01.map: $(OBJS) $(USER_OBJS) D:\010.\ 2025\ 04\ Study\00.\ WaveGarden\FW\WaveGarden_01\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "WaveGarden_01.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\010. 2025 04 Study\00. WaveGarden\FW\WaveGarden_01\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="WaveGarden_01.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -281,7 +281,11 @@ void DMA2_Stream1_IRQHandler(void)
 void USART6_IRQHandler(void)
 {
   /* USER CODE BEGIN USART6_IRQn 0 */
-
+  if ((__HAL_UART_GET_FLAG(&huart6, UART_FLAG_FE)) || (__HAL_UART_GET_FLAG(&huart6, UART_FLAG_ORE)))
+  {
+    __HAL_UART_CLEAR_OREFLAG(&huart6);
+    __HAL_UART_CLEAR_FEFLAG(&huart6);
+  }
   /* USER CODE END USART6_IRQn 0 */
   HAL_UART_IRQHandler(&huart6);
   /* USER CODE BEGIN USART6_IRQn 1 */
@@ -345,7 +349,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     uart6_rx_length = Size;
 
     // 수신 완료 플래그 설정
-    uart6_data_ready = 1;                      
+    uart6_data_ready = 1;
+    
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *) uart6_rx_buf, UART6_RX_BUF_SIZE);
+    __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
   }
 }
 

@@ -12,6 +12,6 @@
 ../Core/Src/stm32f4xx_it.c:239:6:USART2_IRQHandler	8	static
 ../Core/Src/stm32f4xx_it.c:253:6:EXTI15_10_IRQHandler	8	static
 ../Core/Src/stm32f4xx_it.c:267:6:DMA2_Stream1_IRQHandler	8	static
-../Core/Src/stm32f4xx_it.c:281:6:USART6_IRQHandler	8	static
-../Core/Src/stm32f4xx_it.c:299:6:HAL_GPIO_EXTI_Callback	16	static
-../Core/Src/stm32f4xx_it.c:324:6:HAL_UARTEx_RxEventCallback	16	static
+../Core/Src/stm32f4xx_it.c:281:6:USART6_IRQHandler	16	static
+../Core/Src/stm32f4xx_it.c:303:6:HAL_GPIO_EXTI_Callback	16	static
+../Core/Src/stm32f4xx_it.c:328:6:HAL_UARTEx_RxEventCallback	16	static
