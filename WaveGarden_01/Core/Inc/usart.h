@@ -60,6 +60,7 @@ void MX_USART6_UART_Init(void);
 /* USER CODE BEGIN Prototypes */
 extern uint8_t UART2_Print(uint8_t * pData);
 extern void UART6_Print(uint8_t * pData);
+extern void ESP32_Print(uint8_t * pData);
 extern uint8_t UART2_Process (void);
 extern uint8_t UART6_Process (void);
 /* USER CODE END Prototypes */
