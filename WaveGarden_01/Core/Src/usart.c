@@ -265,6 +265,7 @@ typedef struct
   void (*func)(uint8_t* pData);
   uint8_t cmp_size;
   const uint8_t * message;
+  
 } Command;
 
 Command cmd_table[] = 
@@ -273,6 +274,7 @@ Command cmd_table[] =
   { "LED_ON\r\n", UART6_Print, 8, (uint8_t *)"Turning LED on\r\n"},
   { "LED_OFF\r\n", UART6_Print, 9, (uint8_t *)"Turning LED off\r\n"},
   { "AT version", UART6_Print, 10, (uint8_t *)"Device Info Print Out.\r\n"},
+  { "\r\nOK\r\n", UART6_Print, 2, (uint8_t *)"Command AT.\r\n"},
   { NULL, NULL, NULL, NULL},
   // { "ESP AT\r\n", ESP32_Print, (uint8_t *)"AT\r\n"},
 };
@@ -283,7 +285,6 @@ Command esp_cmd_table[] =
   { "ESP ATGMR\r\n", ESP32_Print, 11, (uint8_t *)"AT+GMR\r\n"},
   { NULL, NULL, NULL, NULL},
 };
-
 
 uint8_t UART2_Print(uint8_t * pData)
 {
@@ -299,28 +300,27 @@ uint8_t UART2_Print(uint8_t * pData)
 
 void UART6_Print(uint8_t * pData)
 {
-  // if ((uart6_data_ready == 1) && (uart6_rx_length != strlen(pData)))
+  // // if ((uart6_data_ready == 1) && (uart6_rx_length != strlen(pData)))
+  // // {
+  // //   HAL_UART_Transmit(&huart2, pData, uart6_rx_length, 100);
+  // // }
+  // // else
+  // // {
+  // if (ESP32_CurrentState == ESP32_RESET)
   // {
-  //   HAL_UART_Transmit(&huart2, pData, uart6_rx_length, 100);
+  //   ESP32_CurrentState = ESP32_IDLE;
+    
+  //   if (HAL_UART_Transmit(&huart2, pData, strlen((uint8_t *) cmd_table[0].message), 1000) == HAL_OK)
+  //   {
+  //     // memset((uint8_t *) uart6_rx_buf, NULL, strlen(uart6_rx_buf));
+  //   }
   // }
   // else
   // {
-  if (ESP32_CurrentState == ESP32_RESET)
-  {
-    ESP32_CurrentState = ESP32_IDLE;
-    
-    if (HAL_UART_Transmit(&huart2, pData, strlen((uint8_t *) cmd_table[0].message), 1000) != HAL_OK)
+    if (HAL_UART_Transmit(&huart2, pData, strlen(pData), 1000) == HAL_OK)
     {
-      memset((uint8_t *) uart6_rx_buf, NULL, strlen(uart6_rx_buf));
+      // memset((uint8_t *) uart6_rx_buf, 0, strlen(uart6_rx_buf));
     }
-  }
-  else
-  {
-    if (HAL_UART_Transmit(&huart2, pData, strlen(pData), 1000) != HAL_OK)
-    {
-      // memset((uint8_t *) uart6_rx_buf, NULL, strlen(uart6_rx_buf));
-    }
-  }
   
   // HAL_UART_Transmit(&huart2, pData, uart6_rx_length, 100);
   // }
@@ -335,8 +335,14 @@ void ESP32_Print(uint8_t * pData)
   // else
   // {
   memset((uint8_t *) uart6_rx_buf, 0, strlen(uart6_rx_buf));
+  HAL_UART_Transmit(&huart2, pData, strlen(pData), 1000);
   HAL_UART_Transmit(&huart6, pData, strlen(pData), 1000);
   // }
+}
+
+void ESP32_CommandtmpSavebuffer(uint8_t * pData)
+{
+  
 }
 
 #if 0
@@ -376,7 +382,13 @@ uint8_t UART6_RxDataParsing (uint8_t * pData)
         ESP32_CurrentState = ESP32_RESET;
         // memset((uint8_t *) uart6_rx_buf, 0, strlen(uart6_rx_buf));
       }
-      cmd_table[i].func((uint8_t *)cmd_table[i].message);
+      // cmd_table[i].func((uint8_t *)cmd_table[i].message);
+      
+      if (HAL_UART_Transmit(&huart2, uart6_rx_buf, strlen(uart6_rx_buf), 1000) == HAL_OK)
+      {
+        cmd_table[i].func((uint8_t *)cmd_table[i].message);
+        memset((uint8_t *) uart6_rx_buf, 0, strlen(uart6_rx_buf));
+      }
       // memset((uint8_t *) uart6_rx_buf, NULL, strlen(uart6_rx_buf));
       return;
     }
@@ -430,19 +442,17 @@ uint8_t UART6_Process (void)
     UART6_RxDataParsing(uart6_rx_buf);
 
     // 수신된 데이터 처리
-    UART6_Print(uart6_rx_buf);    // uart2 수신 버퍼
+    // UART6_Print(uart6_rx_buf);    // uart2 수신 버퍼
 
-    
 
-    
     uart6_rx_length = 0;
     uart6_data_ready = 0;
 
     // memset((uint8_t *) uart6_rx_buf, 0, uart6_rx_length);
     // DMA 재시작
     // HAL_UART_DMAStop(&huart2);  // 수신 중단
-    // HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *) uart6_rx_buf, UART6_RX_BUF_SIZE);
-    // __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
+    HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *) uart6_rx_buf, UART6_RX_BUF_SIZE);
+    __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
   }
 
   return ;

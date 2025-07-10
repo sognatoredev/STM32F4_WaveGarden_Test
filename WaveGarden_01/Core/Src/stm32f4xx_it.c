@@ -351,8 +351,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     // 수신 완료 플래그 설정
     uart6_data_ready = 1;
     
-    HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *) uart6_rx_buf, UART6_RX_BUF_SIZE);
-    __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
+    // HAL_UARTEx_ReceiveToIdle_DMA(&huart6, (uint8_t *) uart6_rx_buf, UART6_RX_BUF_SIZE);
+    // __HAL_DMA_DISABLE_IT(&hdma_usart6_rx, DMA_IT_HT);
   }
 }
 
