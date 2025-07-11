@@ -43,14 +43,14 @@ extern DMA_HandleTypeDef hdma_usart6_rx;
 #define UART2_RX_BUF_SIZE 256
 #define UART6_RX_BUF_SIZE 256
 
-extern volatile uint8_t uart2_rx_buf[UART2_RX_BUF_SIZE];    // uart2 ?ˆ˜?‹  ë²„í¼
-extern volatile uint8_t uart6_rx_buf[UART6_RX_BUF_SIZE];    // uart3 ?ˆ˜?‹  ë²„í¼
+extern volatile uint8_t uart2_rx_buf[UART2_RX_BUF_SIZE];    // uart2 ?ï¿½ï¿½?ï¿½ï¿½ ë²„í¼
+extern volatile uint8_t uart6_rx_buf[UART6_RX_BUF_SIZE];    // uart3 ?ï¿½ï¿½?ï¿½ï¿½ ë²„í¼
 
-extern uint8_t uart_data_ready;               // ?°?´?„° ?ˆ˜?‹  ?™„ë£? ?”Œ?˜ê·?
-extern uint16_t uart_rx_length;               // ?ˆ˜?‹ ?œ ?‹¤? œ ê¸¸ì´
+extern uint8_t uart_data_ready;               // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ï¿½?
+extern uint16_t uart_rx_length;               // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ê¸¸ì´
 
-extern uint8_t uart6_data_ready;               // ?°?´?„° ?ˆ˜?‹  ?™„ë£? ?”Œ?˜ê·?
-extern uint16_t uart6_rx_length;               // ?ˆ˜?‹ ?œ ?‹¤? œ ê¸¸ì´
+extern uint8_t uart6_data_ready;               // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ï¿½? ?ï¿½ï¿½?ï¿½ï¿½ï¿½?
+extern uint16_t uart6_rx_length;               // ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ê¸¸ì´
 
 /* USER CODE END Private defines */
 
@@ -63,6 +63,8 @@ extern void UART6_Print(uint8_t * pData);
 extern void ESP32_Print(uint8_t * pData);
 extern uint8_t UART2_Process (void);
 extern uint8_t UART6_Process (void);
+
+extern void print_boot_message(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

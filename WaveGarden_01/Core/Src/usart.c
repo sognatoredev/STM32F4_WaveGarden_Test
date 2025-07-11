@@ -24,6 +24,7 @@
 #include "gpio.h"
 
 volatile uint8_t uart2_rx_buf[UART2_RX_BUF_SIZE];    // uart2 수신 버퍼
+volatile uint8_t uart2_tx_buf[1000];                 // uart 송신 버퍼
 volatile uint8_t uart6_rx_buf[UART6_RX_BUF_SIZE];    // uart6 수신 버퍼
 
 uint8_t uart_data_ready = 0;               // 데이터 수신 완료 플래그
@@ -248,6 +249,97 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
+
+/****************************************************************************/
+void print_reset_reason(void) 
+{
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST))
+    {
+      sprintf(uart2_tx_buf, "Reset cause: Pin Reset\r\n");
+      HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST))
+    {
+      sprintf(uart2_tx_buf, "Reset cause: Power-On Reset\r\n");
+      HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST))
+    {
+      sprintf(uart2_tx_buf, "Reset cause: Software Reset\r\n");
+      HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST))
+    {
+      sprintf(uart2_tx_buf, "Reset cause: Independent Watchdog\r\n");
+      HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST))
+    {
+      sprintf(uart2_tx_buf, "Reset cause: Window Watchdog\r\n");
+      HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    }
+    else
+    {
+      sprintf(uart2_tx_buf, "Reset cause: Unknown\r\n");
+      HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    }
+    __HAL_RCC_CLEAR_RESET_FLAGS(); // 리셋 플래그 초기화
+}
+
+void print_device_info(void) 
+{
+    uint16_t flash_kb = *(uint16_t*)FLASHSIZE_BASE;
+    uint32_t uid0 = *(uint32_t*)UID_BASE;
+    uint32_t uid1 = *(uint32_t*)(UID_BASE + 4);
+    uint32_t uid2 = *(uint32_t*)(UID_BASE + 8);
+
+    sprintf(uart2_tx_buf, "Flash Size: %d KB\r\n", flash_kb);
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    sprintf(uart2_tx_buf, "UID: %08lX-%08lX-%08lX\r\n", uid2, uid1, uid0);
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+}
+
+void print_clocks(void) 
+{
+    sprintf(uart2_tx_buf, "System Clock: SYSCLK=%lu Hz, HCLK=%lu Hz, APB1=%lu Hz, APB2=%lu Hz\r\n",
+        HAL_RCC_GetSysClockFreq(),
+        HAL_RCC_GetHCLKFreq(),
+        HAL_RCC_GetPCLK1Freq(),
+        HAL_RCC_GetPCLK2Freq());
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+}
+
+void print_boot_message(void)
+{
+    sprintf(uart2_tx_buf, "\r\n===============================\r\n");
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    sprintf(uart2_tx_buf, "     STM32F429 Nucleo Board _ Boot Information     \r\n");
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    sprintf(uart2_tx_buf, "===============================\r\n");
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    HAL_Delay(100);
+
+    sprintf(uart2_tx_buf, "Firmware: v1.0.0 (Build 12)\r\n");
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    HAL_Delay(100);
+
+    print_reset_reason();
+    HAL_Delay(100);
+    print_device_info();
+    HAL_Delay(100);
+    print_clocks();
+    HAL_Delay(100);
+
+    sprintf(uart2_tx_buf, "UART2: 115200 bps\r\n");
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    HAL_Delay(100);
+    // printf("I2C1: OK | SPI1: OK | ADC: Disabled\r\n");
+    // HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf, 1000));
+    sprintf(uart2_tx_buf, "===============================\r\n\r\n");
+    HAL_UART_Transmit(&huart2, uart2_tx_buf, strlen(uart2_tx_buf), 1000);
+    HAL_Delay(100);
+}
+/****************************************************************************/
 
 typedef enum
 {

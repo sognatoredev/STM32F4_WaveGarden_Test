@@ -94,6 +94,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
+  print_boot_message();
   HAL_TIM_Base_Start_IT(&htim1);
 
   // HAL_UART_Receive_DMA(&huart2, uart2_rx_buf, UART2_RX_BUF_SIZE);
